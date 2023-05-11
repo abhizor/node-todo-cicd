@@ -26,6 +26,7 @@ The project is a Todo webapp which can
 *   Can accept new entries 
 *   And can also delete them.
 
+![diagram](https://i.ibb.co/ys2GpB2/jenkins-ci-cd-neel-soni.png)
 ![project_output](https://33333.cdn.cke-cs.com/kSW7V9NHUXugvhoQeFaf/images/c11bb3f4ecab4624998676f6ab9da2f10767b3ce26659487.png)
 
 ## Build
