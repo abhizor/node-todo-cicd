@@ -7,7 +7,7 @@ pipeline{
                 git url: 'https://github.com/abhizor/node-todo-cicd.git' ,branch: 'master'
             }
         }
-        stage('Build'){
+        stage('Build and Test'){
             steps{
                 sh 'docker build . -t abhishar7225/node-todo-test:latest'
                 sh 'whoami' 
@@ -20,11 +20,6 @@ pipeline{
                 sh 'docker push abhishar7225/node-todo-test:latest'
             
                 }
-            }
-        }
-        stage('Test'){
-            steps{
-                echo "Testing the Github Code"
             }
         }
         stage('Deployment'){
