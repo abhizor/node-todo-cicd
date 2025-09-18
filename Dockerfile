@@ -1,7 +1,16 @@
 FROM node:lts-alpine
-WORKDIR app
-COPY . /app
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
-RUN npm run test
-EXPOSE 8000
-CMD ["node","app.js"]
+
+# Copy the rest of the application
+COPY . .
+
+# Run the app
+CMD ["node", "app.js"]
