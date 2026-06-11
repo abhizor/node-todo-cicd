@@ -1,0 +1,7 @@
+# Unwanted file that i dont want my continer to have
+
+README.md
+docker-compose.yaml
+.gitignore
+.git
+Jenkinsfile
