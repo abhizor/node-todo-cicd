@@ -24,7 +24,7 @@ pipeline{
         }
         stage('Test'){
             steps{
-                echo "Testing the Github Code"
+                echo "Testing the Github Code for feature branch "
             }
         }
         stage('Deployment'){
