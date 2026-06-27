@@ -24,7 +24,7 @@ pipeline {
  stages{
     stage("Clone Repository"){
 
-        sh "git clone https://github.com/abhizor/node-todo-cicd.git", branch: "master"
+        sh "git url: https://github.com/abhizor/node-todo-cicd.git", branch: "master"
     }
     stage("Install Dependencies"){
       steps{
