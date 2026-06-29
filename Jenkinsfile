@@ -36,12 +36,12 @@ pipeline {
         parallel{
             stage("Lint"){
                 steps{
-                    sh "npm run lint || true "
+                    sh "npm run lint "
                 }
             }
             stage("Test"){
                steps{
-                sh "npm test || true"
+                sh "npm test "
                }
             }
 
