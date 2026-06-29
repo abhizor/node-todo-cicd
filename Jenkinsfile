@@ -59,7 +59,7 @@ pipeline {
         steps{
             sh """
             echo "Scanning PR #${CHANGE_ID} by ${CHANGE_AUTHOR}"
-            sh "docker run --rm aquasec/trivy image ${IMAGE_NAME}:${IMAGE_TAG}"
+            docker run --rm aquasec/trivy image ${IMAGE_NAME}:${IMAGE_TAG}
             """
         }
 
@@ -72,12 +72,13 @@ pipeline {
             }
         }
         steps{
-            sh """
+            
             withCredentials([usernamePassword( 
             credentialsId: "dockerhub",
             usernameVariable: "DOCKER_USERNAME",
             passwordVariable: "DOCKER_PASSWORD"
             )]){
+              sh """
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             docker push ${IMAGE_NAME}:${IMAGE_TAG}
             }
@@ -87,13 +88,13 @@ pipeline {
     }
     stage("Approval"){
         when{
-            allof{
+            allOf{
                 branch "master"
                 not {changeRequest()}
             }
         }
         steps{
-            input messages: "Deploy to production?", ok: "Deploy"
+            input message: "Deploy to production?", ok: "Deploy"
         }
     }
     stage("Deploy"){
