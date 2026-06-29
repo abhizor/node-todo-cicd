@@ -2,3 +2,6 @@
 node_modules/
 deb
 echo
+test.js
+README.md
+docker-compose.yaml
