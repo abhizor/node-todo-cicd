@@ -64,28 +64,32 @@ pipeline {
         }
 
     }
-    stage("Push Docker Image"){
-        when{
-            allOf{
-                branch "master"
-                not { changeRequest() }
+    stage("Push Docker Image") {
+    when {
+        allOf {
+            branch "master"
+            not {
+                changeRequest()
             }
         }
-        steps{
-            
-            withCredentials([usernamePassword( 
-            credentialsId: "dockerhub",
-            usernameVariable: "DOCKER_USERNAME",
-            passwordVariable: "DOCKER_PASSWORD"
-            )]){
-              sh """
-            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-            docker push ${IMAGE_NAME}:${IMAGE_TAG}
-            }
+    }
+
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: "dockerhub",
+                usernameVariable: "DOCKER_USERNAME",
+                passwordVariable: "DOCKER_PASSWORD"
+            )
+        ]) {
+
+            sh """
+                echo "\$DOCKER_PASSWORD" | docker login -u "\$DOCKER_USERNAME" --password-stdin
+                docker push ${IMAGE_NAME}:${IMAGE_TAG}
             """
         }
-
     }
+}
     stage("Approval"){
         when{
             allOf{
