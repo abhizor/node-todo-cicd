@@ -8,7 +8,7 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME     = 'abhizor/node-todo-cicd'
+    IMAGE_NAME     = 'abhishar7225/node-todo-cicd'
     IMAGE_TAG      = "${BUILD_NUMBER}"
     CONTAINER_NAME = 'node-todo-cicd'
   }
@@ -86,7 +86,7 @@ pipeline {
             )
         ]) {
 
-            sh """
+            sh """git 
                 echo "\$DOCKER_PASSWORD" | docker login -u "\$DOCKER_USERNAME" --password-stdin
                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
             """
