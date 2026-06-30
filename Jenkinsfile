@@ -86,7 +86,7 @@ pipeline {
             )
         ]) {
 
-            sh """git 
+            sh """ 
                 echo "\$DOCKER_PASSWORD" | docker login -u "\$DOCKER_USERNAME" --password-stdin
                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
             """
