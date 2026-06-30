@@ -62,7 +62,7 @@ pipeline {
         steps{
             sh """
             echo "Scanning PR #${CHANGE_ID} by ${CHANGE_AUTHOR}"
-            docker run --rm aquasec/trivy image ${IMAGE_NAME}:${IMAGE_TAG}
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${IMAGE_NAME}:${IMAGE_TAG}
             """
         }
 
