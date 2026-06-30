@@ -8,7 +8,7 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME     = 'abhizor/node-todo-cicd'
+    IMAGE_NAME     = 'abhishar7225/node-todo-cicd'
     IMAGE_TAG      = "${BUILD_NUMBER}"
     CONTAINER_NAME = 'node-todo-cicd'
   }
@@ -23,8 +23,9 @@ pipeline {
    
  stages{
     stage("Clone Repository"){
-
-        sh "git clone https://github.com/abhizor/node-todo-cicd.git", branch: "master"
+        steps{
+           git url: "https://github.com/abhizor/node-todo-cicd.git", branch: "master"
+        }
     }
     stage("Install Dependencies"){
       steps{
@@ -35,12 +36,12 @@ pipeline {
         parallel{
             stage("Lint"){
                 steps{
-                    sh "npm run lint || true "
+                    sh "npm run lint || true"
                 }
             }
             stage("Test"){
                steps{
-                sh "npm test || true"
+                sh "npm test "
                }
             }
 
@@ -48,7 +49,10 @@ pipeline {
     }
     stage("Build Docker Image"){
         steps{
-            sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ." 
+            sh """
+             docker logout || true
+             docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+             """ 
         }
     }
     stage("Security Scan"){
@@ -58,41 +62,46 @@ pipeline {
         steps{
             sh """
             echo "Scanning PR #${CHANGE_ID} by ${CHANGE_AUTHOR}"
-            sh "docker run --rm aquasec/trivy image ${IMAGE_NAME}:${IMAGE_TAG}"
+            docker run --rm aquasec/trivy image ${IMAGE_NAME}:${IMAGE_TAG}
             """
         }
 
     }
-    stage("Push Docker Image"){
-        when{
-            allOf{
-                branch "master"
-                not { changeRequest() }
+    stage("Push Docker Image") {
+    when {
+        allOf {
+            branch "master"
+            not {
+                changeRequest()
             }
         }
-        steps{
-            sh """
-            withCredentials([usernamePassword( 
-            credentialsId: "dockerhub",
-            usernameVariable: "DOCKER_USERNAME",
-            passwordVariable: "DOCKER_PASSWORD"
-            )]){
-            echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-            docker push ${IMAGE_NAME}:${IMAGE_TAG}
-            }
-            """
-        }
+    }
 
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: "DockerHubCer",
+                usernameVariable: "DOCKER_USERNAME",
+                passwordVariable: "DOCKER_PASSWORD"
+            )
+        ]) {
+
+            sh """ 
+                echo "\$DOCKER_PASSWORD" | docker login -u "\$DOCKER_USERNAME" --password-stdin
+                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+            """
+            }
+       }
     }
     stage("Approval"){
         when{
-            allof{
+            allOf{
                 branch "master"
                 not {changeRequest()}
             }
         }
         steps{
-            input messages: "Deploy to production?", ok: "Deploy"
+            input message: "Deploy to production?", ok: "Deploy"
         }
     }
     stage("Deploy"){
