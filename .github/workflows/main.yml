@@ -1,0 +1,46 @@
+name: devSecOps-Pipline
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+ push:
+   branches: [master]
+ pull_request:
+ workflow_dispatch:
+jobs:
+ codeql:
+   runs-on: ubuntu-latest
+   permissions: 
+    security-events: write
+    contents: read
+   steps:
+     -  name: Checkout the Code
+        uses: actions/checkout@v4
+     
+     -  name:  init CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript 
+
+     -  name: autobuild codeql
+        uses: github/codeql-action/autobuild@v3
+
+     -  name: Analyze
+        uses: github/codeql-action/analyze@v3
+    
+test: 
+  needs: codeql
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+       node_version: [18,20]
+    steps:
+      - name: Checkout Code 
+        uses: actions/checkout@v4
+
+      - name: 
+   
+        
+     
+    
+  
