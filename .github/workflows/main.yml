@@ -6,12 +6,12 @@ env:
   DOCKER_IMAGE_NAME:  abhishar7225/devsecops-pipeline
   CONTAINER_NAME: node-todo-app
 on:
- push:
-   branches: [master]
+ # push:
+  # branches: [master]
  pull_request:
  workflow_dispatch:
- schedule:
-    - cron: '0 2 * * *'
+ #schedule:
+ #   - cron: '0 2 * * *'
 jobs:
  codeql:
    runs-on: ubuntu-latest
